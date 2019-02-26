@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Server App</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+	<div class = "central-div">
+		<input placeholder="seed value" id = "nVal">
+		<select id = "fact">
+			<option value = "Factorial" > n-Factorial</option>
+			<option value = "Summation" id = "sum"> Summation</option>
+		</select>
+		<button onclick = "calculate()">calculate</button>
+		<div id = "result"></div>
+	</div>
+</body>
+<script>
+	/* function for getting the selected option, then making ajax call based on it*/
+	function calculate(){
+		var e = document.getElementById("fact");
+		var info = e.value;
+		var nVal = document.getElementById("nVal").value;
+		var url1 = `http://localhost:8080/sum?n=${nVal}`;
+		var url2 = `http://localhost:8080/fact?n=${nVal}`;
+		if(checkBad(nVal)){
+			if(info == "Factorial"){
+				ajax(url2)
+			}
+			else if(info == "Summation"){
+				ajax(url1)
+			}
+		}	
+	}
+	/* simple ajax call to the client side */
+	function ajax(url){
+		$.ajax({
+			type: "GET",
+			url: url,
+			success: function(res){
+				document.getElementById("result").innerHTML = res;
+			},
+			error : function(jgXHU,textStatus,errorThrown){
+				alert("Error: " + textStatus + " " + errorThrown);
+			}
+		})
+	};
+	/* checking bad inputs */
+	function checkBad(val){
+			try{
+				val = parseInt(val)
+			}
+			catch(err) {
+				return false
+			}
+			if (val.length <= 0){
+				document.getElementById("result").innerHTML = "input box cannot be empty";
+				return false;
+			}
+			else if (isNaN(val)){
+				document.getElementById("result").innerHTML = "Invalid input";
+				return false;
+			}
+			else if(val < 0){
+				document.getElementById("result").innerHTML = "Cannot compute a negative integer";
+				return false;
+			}
+			return true;
+	}
+</script>
+
+<style>
+	.central-div{
+		text-align: center;
+	}
+</style>
+</html>

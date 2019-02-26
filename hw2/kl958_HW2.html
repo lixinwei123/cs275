@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css"/>
+	<style>
+		/* VERY SIMPLE STYLING OR MAKING THE PAGE LOOK LITTLE BIT MORE FORMATTED */
+		.center {
+			text-align: center;
+		}
+		table{
+			display: inline-block;
+		}
+		.margin-custom{
+			margin-left: 2rem;
+			margin-right: 2rem;
+		}
+	</style>
+	<script>
+		$(document).ready(function() {
+			$("#niceWords").hide(); 
+		});//HIDE THE FOOTER
+
+		function getWhetherAPI(){
+			var client_id = $("#client_id").val();
+			var secret_key = $("#secret_key").val();
+			/* CHECKING TO MAKE SURE IT'S NOT EMPTY */
+			if(client_id.length <= 0 || secret_key.length <= 0){
+				alert("you are missing either a client id, or secret key :(");
+			}
+			else{
+				if(navigator.geolocation){
+					navigator.geolocation.getCurrentPosition(success =>{
+						/* AWAITS FOR GEOLOCATION RESPONSE, THEN MAKE THE AJAX CALL USING THE RETURNED INFORMATION*/
+						var coordinate = success.coords;
+						ajaxCall(coordinate.latitude, coordinate.longitude, client_id,secret_key); 
+					}
+					, 
+					fail =>{
+						/* ALERT FAILURE*/
+						window.alert("ooops, we couldn't detect your location, ARE YOU SURE YOU ARE ON EARTH?? Or are you on Mars?");
+					});
+				}
+			}
+		};
+
+		function ajaxCall(lat,lon,id,key){
+			var url =  "https://api.aerisapi.com/forecasts/"+lat.toString()+","+lon.toString()+"?client_id="+id+"&client_secret="+key;
+			$.ajax({
+				type: "GET",
+				url: url,
+				dataType: "jsonp",
+				success : function(res){
+					if(res.success == true){
+						console.log(res)
+						var periods = res.response[0].periods;
+						var weatherTable = '<table  data-role=“table” class=“ui-responsive” ><thead><tr><th>date</th><th>maxTemp(F)</th><th>minTemp(F)</th><th>description</th></tr> </thead><tbody>'; //CREATE A TABLE STRING
+						/* POPULATE THE TABLE STRING WITH EACAH PERIOD OUT OF 7 DAYS*/
+						for(i = 0; i < periods.length; i++){
+							/* CONVERT DATE FROM TIMESTAMP TO STRING TO JUST YEAR, MONTH AND WEEKDAY */
+							var date = new Date(periods[i].timestamp*1000);
+							date = date.toString();
+							date = date.split(" ");
+							date = date[1] + " " + date[2] + ", " + date[0]; 
+							var maxTemp = periods[i].maxTempF.toString(); 
+							var minTemp = periods[i].minTempF.toString();
+							var descrip = periods[i].weather;
+							weatherTable += '<tr><td>' + date + '</td><td>' + maxTemp + '</td><td>' + minTemp + '</td><td>' + descrip + "</td> </tr>";
+						}
+						weatherTable += "</tbody></table>";
+						document.getElementById("result").innerHTML = weatherTable;
+						$("#niceWords").show(); //SHOW THE FOOTER
+						$("#welcomeWords").hide();  //HIDE THE WELCOME FOOTER
+
+					}
+					/* IF SERVER API RETURNS WITH A FALSE*/
+					else{
+						window.alert("oh noses, it seems that the aliens have hijacked the weather station... please try again later.")
+					}
+				},
+				/*IF AJAX REQUEST MADE TO THE SERVER FAILS, NORMALLY CAUSED BY MAKING TOO MANY REQUESTS USING AJAX WITHIN A SHORT TIME FROM THE SAME PLACE*/
+				error : function(jgXHU,textStatus,errorThrown){
+					alert("Error: " + textStatus + " " + errorThrown);
+				}
+			});
+		}
+	</script>
+	<title>Weather Alerter</title>
+</head>
+
+<body>
+	<!-- REALLY STRAIGHT FORWARD HTML CODE, COMMENTS WOULD JUST CLUTTER THE CODE -->
+	<h1 data-role=“header” data-position = "fixed" class = "center"> This website tells your weather!</h1>
+
+	<div class = "center margin-custom">
+		<input name = "client id" placeholder="client id" id = "client_id">
+		<input name = "secret key" placeholder="secret key" id = "secret_key">
+		<button onclick = "getWhetherAPI();">submit</button>
+	</div>
+
+	<div class = "center">
+		<h1>Result:</h1>
+		<div id = "result" class = "center"></div>
+	</div>
+
+	<h1 data-role=“footer” class ="center"  data-position = "fixed" id = "niceWords"> Thanks for using, have a niceeee day! </h1>
+	<h1 data-role=“footer” class ="center"  data-position = "fixed" id = "welcomeWords"> Welcome, welcome, ladies and gentlemen, I am the Weather Wizard! </h1>
+
+</body>
+
+</html>

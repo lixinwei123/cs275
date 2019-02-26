@@ -1,0 +1,38 @@
+/*generally wanna avoid calling the direct tag element when styling, but rather create classes for styling. 
+Becauase this assignment is simple, it is suffice to use only direct tag elements.
+*/
+table, .right-column, .left-column{
+	border:solid 1px;
+}
+
+tbody, tr, table, img,.left-column{
+	display: block; 
+}
+
+img, .left-column{
+	width: 50%;
+}
+
+h1 {
+	text-align: center;
+}
+
+table{
+	width: 20%;
+}
+
+img, table{
+	margin: auto;
+}
+
+.general-info{
+	margin-left:2rem;
+}
+
+.right-column{
+	width:1000;
+}
+
+.left-column{
+    float: left;
+}

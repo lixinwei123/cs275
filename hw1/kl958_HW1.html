@@ -1,0 +1,117 @@
+<html>
+	<head>
+		
+		<style>
+			/*generally wanna avoid calling the direct tag element when styling, but rather create classes for styling. 
+			Becauase this assignment is simple, it is suffice to use only direct tag elements.
+			*/
+			table, .right-column, .left-column{
+				border:solid 1px;
+			}
+
+			tbody, tr, table, img,.left-column{
+				display: block; 
+			}
+
+			img, .left-column{
+				width: 50%;
+			}
+
+			h1 {
+				text-align: center;
+			}
+
+			table{
+				width: 20%;
+			}
+
+			img, table{
+				margin: auto;
+			}
+
+			.general-info{
+				margin-left:2rem;
+			}
+
+			.right-column{
+				width:1000;
+			}
+
+			.left-column{
+			    float: left;
+			}
+		</style>
+
+	<title>Fibonacci Number</title>
+	</head>
+	<body>
+		<h1>Fibonacci Number History & Calculator</h1>
+
+		<div class = "general-info">
+			<h2 >History of Fibonacci Sequence</h2>
+			<p> Fibonacci was born around 1170 to Guglielmo, an Italian merchant and customs official.[8] Guglielmo directed a trading post in Bugia, Algeria). Fibonacci travelled with him as a young boy, and it was in Bugia that he learned about the Hindu–Arabic numeral system.[13][3] <br>
+
+			Fibonacci travelled around the Mediterranean coast, meeting with many merchants and learning about their systems of doing arithmetic. He soon realised the many advantages of the Hindu-Arabic system, which unlike the Roman numerals used at the time, allowed easy calculation using a place-value system. In 1202, he completed the Liber Abaci (Book of Abacus or The Book of Calculation) which popularized Hindu–Arabic numerals in Europe.[3] <br>
+
+			Fibonacci became a guest of Emperor Frederick II, who enjoyed mathematics and science. In 1240, the Republic of Pisa honored Fibonacci (referred to as Leonardo Bigollo)[14] by granting him a salary in a decree that recognized him for the services that he had given to the city as an advisor on matters of accounting and instruction to citizens.[15] <br>
+
+			The date of Fibonacci's death is not known, but it has been estimated to be between 1240[16] and 1250,[17] most likely in Pisa.</p>
+			<img  src = "./fibimg.png">
+		</div>
+
+		<div class = "general-info">
+			<h2>Fibonnaci Sequence Calculator</h2>
+			<p>please enter a number greater than 0: </p>
+			<input id = "fib-num"> 
+			<button onclick="displayFib();" >calculate</button>
+			<h4 id = "fib-result"></h4> 
+		</div>
+
+		<div id = "fib-table"></div> 
+	</body> 
+
+	<script>
+		/* THE FUNCTION THAT CATCHES ERROR, DISPLAYS RESULT OF A COMPUTATION, AND THE TABLE*/
+		function displayFib(){
+			var fibVal = document.getElementById("fib-num").value; 
+			var fibNum = parseInt(fibVal);
+			if (fibVal.length <= 0){
+				document.getElementById("fib-result").innerHTML = "input box cannot be empty";
+				return;
+			}
+			else if (isNaN(fibNum)){
+				document.getElementById("fib-result").innerHTML = "Invalid input";
+				return;
+			}
+			else if(fibNum < 1){
+				document.getElementById("fib-result").innerHTML = "Cannot compute Fib of a negative integer";
+				return;
+			}
+			fibNum --; //DECREMENT 1 BECAUSE STARTING AT 0
+			    document.getElementById("fib-result").innerHTML = "The fibonacci number is " + calculateFib(fibNum);
+			    generateTable(fibNum);
+		}
+		/* A SIMPLE ITERATIVE WAY TO SOLVE FIBONNACI SEQUENCE*/
+		function calculateFib(num){
+			var a = 1, b = 0, temp;
+			while (num > 0 ){
+				temp = a;
+				a = a + b;
+				b = temp;
+				num --;
+			}
+			return b
+		}
+		/* GENERAL THE TABLES FOR DIFFERENT COMPUTATION */
+		function generateTable(num){
+			num ++;
+			var fibTable = '<table><tr><th class = "left-column left-th">n</th><th class = "right-column right-th">fib(n)</th></tr>';
+			for(i = 0; i < num; i++){
+				fibTable += '<tr><td class = "left-column">' + i + '</td><td class = "right-column" >' + calculateFib(i) + "</td> </td>";
+			}
+			fibTable += "</table>";
+			document.getElementById("fib-table").innerHTML = fibTable
+		}
+	</script>
+
+</html>

@@ -1,0 +1,24 @@
+Kevin Li 
+kl958
+Section 004
+
+Project Overview: This project allows you to get the weather information surrounding area upon inputting a Access id and a secret key from aerisweather. 
+
+To Run it: Need a modern browser, internet, allow access to your location, and access key with client id from the API.
+
+My client id is : LrCNDjmwNIcm09qh7pQIR 
+key: TnSLi1NXWJY0WuZt1Yd9llf5YAWsiecrQg5PQvFT 
+
+I decided to only pull 4 pieces of information: Date, maximum temperature and minimum temperature in Fahrenheit, and an overall description of the weather.
+
+Code Overview: 
+
+	Styling: Minimum usage of styling, only centered elements and added margin to make it look nicer. Employed jquery css and its mobile capability so it can fit nicely with mobile.
+
+	Javascript: Has two functions, getWeatherAPI() and ajaxCall(lat,lon,id,key). 
+		getWeatherAPI()- First check that the client_id and key inputs are not empty, then uses the geolocation, prompts the user to agree to share its location, then get it. If the user refuses, alert an error. If the user agrees, wait for a response, then get the location of the user. Finally, calls the ajaxCall() function.
+
+		ajaxCall()- very straight forward calling and usage of Ajax. The success function pretty much creates a table first in string, then concatenate it with the info from the array periods[], which came from the result of the ajax call. Finaly, set the innerHTML of div to this concatenation. If ajax call fails, it's probably due to the fact that the user first make a request, refreshes the page, then make a request immediately after. I don't think you are allowed to make multiple request using Ajax within a period of time after refreshing a browser.
+
+	HTML: Pretty straight forward code, just two input boxes, a header and a footer and a div that returns a result.
+
